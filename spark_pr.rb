@@ -212,16 +212,30 @@ module Spark
     type = o.delete(:type) || 'smooth'
     self.send(type, results, o).to_png
   end
+
+  # convenience method
+  def Spark.data_uri( results, options = {})
+    require 'base64'
+    png = self.plot( results, options )
+    # doesn't attempt to respect some limits noted in RFC 2397 since the data:
+    # url is supposed to be 'short' (1k), but the meaning of that word has changed
+    # a bit since 1998.
+    # Modern browsers allow 4k-32k or more According to http://dataurl.net/#about
+    %{data:image/png;base64,#{Base64.encode64(png).gsub("\n",'')}}
+  end
 end
 
-#to test this: 
-#PNG output
-File.open( 'test.png', 'wb' ) do |png|
-  png << Spark.plot( [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42, 20, 98, 34, 53, 1, 55, 74, 63, 38, 31, 98, 89], :has_min => true, :has_max => true, 'has_last' => 'true', 'height' => '40', :step => 10, :normalize => 'logarithmic' )
+if $0 == __FILE__
+  data1 = [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42, 20, 98, 34, 53,  1, 55, 74, 63, 38, 31, 98, 89]
+  data2 = [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42,  1, 98, 34, 53, 97, 55, 74, 63, 38, 31, 98, 89]
+  #to test this:
+  #PNG output
+  File.open( 'test.png', 'wb' ) do |png|
+    png << Spark.plot( data1, :has_min => true, :has_max => true, 'has_last' => 'true', 'height' => '40', :step => 10,
+                       :normalize => 'logarithmic' )
+  end
+
+  #ASCII output
+  puts Spark.discrete( data2, :has_min => true, :has_max => true, :height => 14, :step => 5 ).to_ascii
+  puts Spark.smooth(   data2, :has_min => true, :has_max => true, :height => 14, :step => 4 ).to_ascii
 end
-
-#ASCII output
-puts Spark.discrete( [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42, 1, 98, 34, 53, 97, 55, 74, 63, 38, 31, 98, 89], :has_min => true, :has_max => true, :height => 14, :step => 5 ).to_ascii
-puts Spark.smooth( [47, 43, 24, 47, 16, 28, 38, 57, 50, 76, 42, 1, 98, 34, 53, 97, 55, 74, 63, 38, 31, 98, 89], :has_min => true, :has_max => true, :height => 14, :step => 4 ).to_ascii
-
-    
