@@ -109,7 +109,7 @@ class SparkCanvas
 
   def to_ascii
     chr = %w(M O # + ; - .) << ' '
-    @canvas.map{ |r| r.map { |pt| chr[grayscale(pt) >> 5] }.to_s << "\n" }.to_s
+    @canvas.map{ |r| r.map { |pt| chr[grayscale(pt) >> 5] }.join << "\n" }.join
   end
 
 end
