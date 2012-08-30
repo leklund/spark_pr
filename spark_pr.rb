@@ -117,7 +117,7 @@ end
 module Spark
   # normalize arr to contain values between 0..1 inclusive
   def Spark.normalize( arr, type = :linear )
-    arr.map!{|v| Math.log(v) } if type == :logarithmic
+    arr = arr.map{|v| Math.log(v) } if type == :logarithmic
     adj, fac = arr.min, arr.max-arr.min
     arr.map {|v| (v-adj).quo(fac) rescue 0 }
   end
@@ -208,9 +208,9 @@ module Spark
 
   # convenience method
   def Spark.plot( results, options = {})
-    options = self.process_options(options)
-    options[:type] ||= 'smooth'
-    self.send(options[:type], results, options).to_png
+    o = self.process_options(options)
+    type = o.delete(:type) || 'smooth'
+    self.send(type, results, o).to_png
   end
 end
 
