@@ -109,8 +109,9 @@ class Spark
 
   def self.data_uri( results, options = {} )
     spark = Spark.new(options)
-    type = opts.delete(:type) || :smooth
-    spark.send(type, results, o).data_uri
+    type = spark.opts.delete(:type) || :smooth
+    spark.send(type, results )
+    spark.data_uri
   end
 end
 
