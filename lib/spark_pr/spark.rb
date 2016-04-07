@@ -23,7 +23,7 @@ class Spark
 
   # normalize arr to contain values between 0..1 inclusive
   def normalize( arr, type = :linear )
-    arr = arr.map{|v| Math.log(v) } if type == :logarithmic
+    arr = arr.map { |v| v.to_f == 0.0 ? 0.0 : Math.log(v) } if type == :logarithmic
     adj, fac = arr.min, arr.max-arr.min
     arr.map {|v| (v-adj).quo(fac) rescue 0 }
   end
