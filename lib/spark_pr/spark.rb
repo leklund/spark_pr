@@ -38,7 +38,12 @@ class Spark
 
     o[:width] ||= (results.size-1)*o[:step] + 5
 
-    c = SparkCanvas.new(o[:width], o[:height])
+    c = if o[:base_color]
+          SparkCanvas.new(o[:width], o[:height], o[:base_color])
+        else
+          SparkCanvas.new(o[:width], o[:height])
+        end
+
 
     results = normalize(results, o[:normalize])
     fac = c.height-5
@@ -80,7 +85,11 @@ class Spark
 
     o[:width] ||= results.size*2-1
 
-    c = SparkCanvas.new(o[:width], o[:height])
+    c = if o[:base_color]
+          SparkCanvas.new(o[:width], o[:height], o[:base_color])
+        else
+          SparkCanvas.new(o[:width], o[:height])
+        end
 
     results = normalize(results, o[:normalize])
     fac = c.height-4
@@ -103,14 +112,14 @@ class Spark
   # convenience methods
   def self.plot( results, options = {} )
     spark = Spark.new(options)
-    type = opts.delete(:type) || :smooth
-    spark.send(type, results, o).to_png
+    type = spark.opts.delete(:type) || :smooth
+    spark.send(type, results).to_png
   end
 
   def self.data_uri( results, options = {} )
     spark = Spark.new(options)
     type = spark.opts.delete(:type) || :smooth
-    spark.send(type, results )
+    spark.send(type, results)
     spark.data_uri
   end
 end

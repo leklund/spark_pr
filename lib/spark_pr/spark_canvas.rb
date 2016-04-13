@@ -13,11 +13,11 @@ class SparkCanvas
   attr_accessor :color
   attr_reader :width, :height
 
-  def initialize(width,height)
+  def initialize(width,height,base_color=[0xFF,0xFF,0xFF])
     @canvas = []
     @height = height
     @width = width
-    height.times{ @canvas << [[0xFF,0xFF,0xFF]]*width }
+    height.times{ @canvas << [base_color]*width }
     @color = [0,0,0,0xFF] #RGBA
   end
 
