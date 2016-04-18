@@ -25,7 +25,7 @@ class Spark
   def normalize( arr, type = :linear )
     arr = arr.map { |v| v.to_f == 0.0 ? 0.0 : Math.log(v) } if type == :logarithmic
 
-    return arr if array.min == array.max
+    return arr if arr.min == arr.max
 
     adj, fac = arr.min, arr.max-arr.min
     arr.map {|v| (v-adj).quo(fac) rescue 0 }
